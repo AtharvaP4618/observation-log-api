@@ -3,4 +3,5 @@ __pycache__/
 .env
 instance/
 *.pyc
-API_Project_Master_Summary_v1.md
+.env
+markdown/
