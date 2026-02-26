@@ -32,16 +32,7 @@ def create_observation():
         db.session.commit()
         db.session.refresh(observation)
 
-        return jsonify({
-            "id": observation.id,
-            "title": observation.title,
-            "category": observation.category,
-            "notes": observation.notes,
-            "duration_minutes": observation.duration_minutes,
-            "date": observation.date.isoformat(),
-            "created_at": observation.created_at.isoformat(),
-            "message": "Observation created successfully"
-        }), 201
+        return jsonify(observation.to_dict()), 201
 
     except Exception as e:
         return jsonify({"error": str(e)})
@@ -49,21 +40,7 @@ def create_observation():
 @main.route("/observations", methods = ["GET"])
 def get_observations():
     observations = Observation.query.all()
-
-    result = []
-
-    for obs in observations:
-        result.append({
-            "id": obs.id,
-            "title": obs.title,
-            "category": obs.category,
-            "notes": obs.notes,
-            "duration_minutes": obs.duration_minutes,
-            "date": obs.date.isoformat(),
-            "created_at": obs.created_at.isoformat()
-        })
-
-    return jsonify(result), 200
+    return jsonify([obs.to_dict() for obs in observations]), 200
 
 @main.route("/observations/<int:id>", methods = ["GET"])
 def get_observations_by_id(id):
@@ -72,15 +49,7 @@ def get_observations_by_id(id):
     if not observation:
         return jsonify({"error":"Observation not found"}), 404
     
-    return jsonify({
-        "id": observation.id,
-        "title": observation.title,
-        "category": observation.category,
-        "notes": observation.notes,
-        "duration_minutes": observation.duration_minutes,
-        "date": observation.date.isoformat(),
-        "created_at": observation.created_at.isoformat()
-    }), 200
+    return jsonify(observation.to_dict()), 200
 
 @main.route("/observations/<int:id>", methods = ["DELETE"])
 def delete_observations_by_id(id):
@@ -93,3 +62,37 @@ def delete_observations_by_id(id):
     db.session.commit()
 
     return jsonify({"message": f"Observation {id} deleted successfully"}), 200
+
+@main.route("/observations/<int:id>", methods = ["PUT"])
+def update_observation(id):
+    observation = Observation.query.get(id)
+
+    if not observation:
+        return jsonify({"error":"Observation not found"}), 404
+    
+    data = request.get_json()
+
+    try:
+        if "title" in data:
+            observation.title = data["title"]
+
+        if "category" in data:
+            observation.category = data["category"]
+
+        if "notes" in data:
+            observation.notes = data["notes"]
+
+        if "duration_minutes" in data:
+            observation.duration_minutes = data["duration_minutes"]
+
+        if "date" in data:
+            observation.date = datetime.strptime(
+                data["date"], "%Y-%m-%d"
+            ).date()
+
+        db.session.commit()
+
+        return jsonify(observation.to_dict()), 200  
+                               
+    except Exception as e:
+        return jsonify({"Error": str(e)}), 400
