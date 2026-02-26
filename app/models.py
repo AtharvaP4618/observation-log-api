@@ -8,3 +8,14 @@ class Observation(db.Model):
     duration_minutes = db.Column(db.Integer)
     date = db.Column(db.Date, nullable=False)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "title": self.title,
+            "category": self.category,
+            "notes": self.notes,
+            "duration_minutes": self.duration_minutes,
+            "date": self.date.isoformat() if self.date else None,
+            "created_at": self.created_at.isoformat() if self.created_at else None
+        }

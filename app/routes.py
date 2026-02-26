@@ -64,3 +64,32 @@ def get_observations():
         })
 
     return jsonify(result), 200
+
+@main.route("/observations/<int:id>", methods = ["GET"])
+def get_observations_by_id(id):
+    observation = Observation.query.get(id)
+
+    if not observation:
+        return jsonify({"error":"Observation not found"}), 404
+    
+    return jsonify({
+        "id": observation.id,
+        "title": observation.title,
+        "category": observation.category,
+        "notes": observation.notes,
+        "duration_minutes": observation.duration_minutes,
+        "date": observation.date.isoformat(),
+        "created_at": observation.created_at.isoformat()
+    }), 200
+
+@main.route("/observations/<int:id>", methods = ["DELETE"])
+def delete_observations_by_id(id):
+    observation = Observation.query.get(id)
+
+    if not observation:
+        return jsonify({"error":"Observation not found"}), 404
+    
+    db.session.delete(observation)
+    db.session.commit()
+
+    return jsonify({"message": f"Observation {id} deleted successfully"}), 200
