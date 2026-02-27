@@ -39,7 +39,59 @@ def create_observation():
     
 @main.route("/observations", methods = ["GET"])
 def get_observations():
-    observations = Observation.query.all()
+    category = request.args.get("category")
+    date = request.args.get("date")
+    min_duration = request.args.get("min_duration")
+    max_duration = request.args.get("max_duration")
+
+    query = Observation.query 
+    if category:
+        query = query.filter(Observation.category == category)
+
+    if date:
+        try:
+            parsed_date = datetime.strptime(date, "%Y-%m-%d").date()
+            query = query.filter(Observation.date == parsed_date)
+        except ValueError:
+            return jsonify({
+            "error": {
+                "code": 400,
+                "message": "Invalid date format. Use YYYY-MM-DD."
+            }
+            }), 400
+
+
+    if min_duration:
+        try:
+            min_duration = int(min_duration)
+            query = query.filter(
+                Observation.duration_minutes >= min_duration
+            )
+        except ValueError:
+            return jsonify({
+                "error": {
+                    "code": 400,
+                    "message": "min_duration must be an integer."
+                }
+            }), 400
+
+
+    if max_duration:
+        try:
+            max_duration = int(max_duration)
+            query = query.filter(
+                Observation.duration_minutes <= max_duration
+            )
+        except ValueError:
+            return jsonify({
+                "error": {
+                    "code": 400,
+                    "message": "max_duration must be an integer."
+                }
+            }), 400
+
+    observations = query.all()
+
     return jsonify([obs.to_dict() for obs in observations]), 200
 
 @main.route("/observations/<int:id>", methods = ["GET"])
@@ -47,7 +99,12 @@ def get_observations_by_id(id):
     observation = Observation.query.get(id)
 
     if not observation:
-        return jsonify({"error":"Observation not found"}), 404
+        return jsonify({
+            "error": {
+                "code": 404,
+                "message": "Observation not found"
+            }
+        }), 404
     
     return jsonify(observation.to_dict()), 200
 
@@ -56,43 +113,48 @@ def delete_observations_by_id(id):
     observation = Observation.query.get(id)
 
     if not observation:
-        return jsonify({"error":"Observation not found"}), 404
+        return jsonify({
+            "error": {
+                "code": 404,
+                "message": "Observation not found"
+            }
+        }), 404
     
     db.session.delete(observation)
     db.session.commit()
 
-    return jsonify({"message": f"Observation {id} deleted successfully"}), 200
+    return jsonify({
+        "message": "Observation deleted successfully"
+    }), 200
 
 @main.route("/observations/<int:id>", methods = ["PUT"])
 def update_observation(id):
     observation = Observation.query.get(id)
 
     if not observation:
-        return jsonify({"error":"Observation not found"}), 404
+        return jsonify({
+            "error": {
+                "code": 404,
+                "message": "Observation not found"
+            }
+        }), 404    
     
     data = request.get_json()
 
-    try:
-        if "title" in data:
-            observation.title = data["title"]
+    if "title" in data:
+        observation.title = data["title"]
+    if "category" in data:
+        observation.category = data["category"]
+    if "notes" in data:
+        observation.notes = data["notes"]
+    if "duration_minutes" in data:
+        observation.duration_minutes = data["duration_minutes"]
+    if "date" in data:
+        observation.date = datetime.strptime(
+            data["date"], "%Y-%m-%d"
+        ).date()
 
-        if "category" in data:
-            observation.category = data["category"]
+    db.session.commit()
 
-        if "notes" in data:
-            observation.notes = data["notes"]
-
-        if "duration_minutes" in data:
-            observation.duration_minutes = data["duration_minutes"]
-
-        if "date" in data:
-            observation.date = datetime.strptime(
-                data["date"], "%Y-%m-%d"
-            ).date()
-
-        db.session.commit()
-
-        return jsonify(observation.to_dict()), 200  
+    return jsonify(observation.to_dict()), 200  
                                
-    except Exception as e:
-        return jsonify({"Error": str(e)}), 400
