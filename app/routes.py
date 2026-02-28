@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, abort 
 from .models import Observation
 from . import db
 from datetime import datetime
@@ -17,7 +17,7 @@ def create_observation():
 
     for field in required_fields:
         if field not in data:
-            return jsonify({"error": f"{field} is required"}), 400
+            abort(400, description=f"{field} is required")
         
     try:
         observation = Observation(
@@ -53,12 +53,7 @@ def get_observations():
             parsed_date = datetime.strptime(date, "%Y-%m-%d").date()
             query = query.filter(Observation.date == parsed_date)
         except ValueError:
-            return jsonify({
-            "error": {
-                "code": 400,
-                "message": "Invalid date format. Use YYYY-MM-DD."
-            }
-            }), 400
+            abort(400, description="Invalid date format. Use YYYY-MM-DD.")
 
 
     if min_duration:
@@ -68,13 +63,7 @@ def get_observations():
                 Observation.duration_minutes >= min_duration
             )
         except ValueError:
-            return jsonify({
-                "error": {
-                    "code": 400,
-                    "message": "min_duration must be an integer."
-                }
-            }), 400
-
+            abort(400, description="min_duration must be an integer")
 
     if max_duration:
         try:
@@ -83,28 +72,44 @@ def get_observations():
                 Observation.duration_minutes <= max_duration
             )
         except ValueError:
-            return jsonify({
-                "error": {
-                    "code": 400,
-                    "message": "max_duration must be an integer."
-                }
-            }), 400
+            abort(400, description="max_duration must be an integer")
+    
+    page = request.args.get("page", 1)
+    limit = request.args.get("limit", 5)
 
-    observations = query.all()
+    try:
+        page = int(page)
+        limit = int(limit)
+    except ValueError:
+        abort(400, description="page and limit must be integers")
+    
+    pagination = query.paginate(
+        page = page,
+        per_page = limit,
+        error_out = False
+    )
 
-    return jsonify([obs.to_dict() for obs in observations]), 200
+    observations = pagination.items
+
+    return jsonify({
+        "meta" : {
+            "total": pagination.total,
+            "page": page,
+            "limit": limit,
+            "pages": pagination.pages,
+            "has_next": pagination.has_next,
+            "has_prev": pagination.has_prev
+        },
+        "data": [obs.to_dict() for obs in observations] 
+    }), 200
+
 
 @main.route("/observations/<int:id>", methods = ["GET"])
 def get_observations_by_id(id):
     observation = Observation.query.get(id)
 
     if not observation:
-        return jsonify({
-            "error": {
-                "code": 404,
-                "message": "Observation not found"
-            }
-        }), 404
+        abort(404, description="Observation not found")
     
     return jsonify(observation.to_dict()), 200
 
@@ -113,12 +118,7 @@ def delete_observations_by_id(id):
     observation = Observation.query.get(id)
 
     if not observation:
-        return jsonify({
-            "error": {
-                "code": 404,
-                "message": "Observation not found"
-            }
-        }), 404
+        abort(404, description="Observation not found")
     
     db.session.delete(observation)
     db.session.commit()
@@ -132,12 +132,7 @@ def update_observation(id):
     observation = Observation.query.get(id)
 
     if not observation:
-        return jsonify({
-            "error": {
-                "code": 404,
-                "message": "Observation not found"
-            }
-        }), 404    
+        abort(404, description="Observation not found")    
     
     data = request.get_json()
 
