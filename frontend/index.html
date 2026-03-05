@@ -46,8 +46,29 @@
 
         <button type="submit">Add Observation</button>
     </form>
-    <hr>
     
+    <hr>
+
+    <h2>Filters</h2>
+    <div id="filters">
+        <label>Category:</label>
+        <input type="text" id="filterCategory" placeholder="e.g. Astronomy">
+
+        <label>Date:</label>
+        <input type="date" id="filterDate">
+
+        <label>Min Duration:</label>
+        <input type="number" id="filterMinDuration" placeholder="minutes">
+
+        <label>Max Duration:</label>
+        <input type="number" id="filterMaxDuration" placeholder="minutes">
+
+        <button id="applyFilters">Apply Filters</button>
+        <button id="clearFilters">Clear Filters</button>
+    </div>
+
+    <hr>
+
     <h2>Observation List</h2>
     <button id="loadBtn">Load Observations</button>
 

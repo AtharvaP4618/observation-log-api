@@ -2,7 +2,30 @@ let currentPage = 1;
 
 function loadObservations() {
 
-    fetch(`http://127.0.0.1:5000/observations?page=${currentPage}`)
+    const category = document.getElementById("filterCategory").value;
+    const date = document.getElementById("filterDate").value;
+    const minDuration = document.getElementById("filterMinDuration").value;
+    const maxDuration = document.getElementById("filterMaxDuration").value;
+
+    let url = `http://127.0.0.1:5000/observations?page=${currentPage}`;
+
+    if (category) {
+        url += `&category=${category}`;
+    }
+
+    if (date) {
+        url += `&date=${date}`;
+    }
+
+    if (minDuration) {
+        url += `&min_duration=${minDuration}`;
+    }
+
+    if (maxDuration) {
+        url += `&max_duration=${maxDuration}`;
+    }
+
+    fetch(url)
         .then(response => response.json())
         .then(result => {
 
@@ -123,6 +146,25 @@ function deleteObservation(id) {
         console.error("Error deleting observation:", error);
     });
 }
+
+document.getElementById("applyFilters").addEventListener("click", function () {
+
+    currentPage = 1;
+    loadObservations();
+
+});
+
+document.getElementById("clearFilters").addEventListener("click", function () {
+
+    document.getElementById("filterCategory").value = "";
+    document.getElementById("filterDate").value = "";
+    document.getElementById("filterMinDuration").value = "";
+    document.getElementById("filterMaxDuration").value = "";
+
+    currentPage = 1;
+    loadObservations();
+
+});
 
 window.onload = function () {
     loadObservations();

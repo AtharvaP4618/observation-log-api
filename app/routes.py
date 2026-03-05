@@ -46,7 +46,7 @@ def get_observations():
 
     query = Observation.query 
     if category:
-        query = query.filter(Observation.category == category)
+        query = query.filter(Observation.category.ilike(f"%{category}%"))
 
     if date:
         try:
@@ -73,6 +73,8 @@ def get_observations():
             )
         except ValueError:
             abort(400, description="max_duration must be an integer")
+
+    query = query.order_by(Observation.created_at.desc())
     
     page = request.args.get("page", 1)
     limit = request.args.get("limit", 5)
