@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Observation Log</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <h1>Observation Logs</h1>
+    <hr>
+    <h2>Add Observations</h2>
+
+    <form id="observationForm">
+        <input 
+            type="text"
+            id="title"
+            placeholder="Observation Title"
+            required
+        >
+
+        <input
+            type="text"
+            id="category"
+            placeholder="Category"
+            required
+        >
+
+        <input
+            type="date"
+            id="date"
+            required
+        >
+
+        <input
+            type="number"
+            id="duration"
+            placeholder="Duration (minutes)"
+            min="0"
+        >
+
+        <input
+            type="text"
+            id="notes"
+            placeholder="Notes"
+        >
+
+        <button type="submit">Add Observation</button>
+    </form>
+    <hr>
+    
+    <h2>Observation List</h2>
+    <button id="loadBtn">Load Observations</button>
+
+    <div id="observationsContainer"></div>
+
+    <div id="paginationControls">
+        <button id="prevBtn">Previous</button>
+        <span id="pageInfo"></span>
+        <button id="nextBtn">Next</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
