@@ -1,5 +1,25 @@
 let currentPage = 1;
 
+function formatTimestamp(timestamp) {
+
+    const date = new Date(timestamp);
+
+    const options = {
+        year: "numeric",
+        month: "short",
+        day: "numeric"
+    };
+
+    const formattedDate = date.toLocaleDateString(undefined, options);
+
+    const formattedTime = date.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit"
+    });
+
+    return `${formattedDate} • ${formattedTime}`;
+}
+
 function loadObservations() {
 
     const category = document.getElementById("filterCategory").value;
@@ -35,36 +55,53 @@ function loadObservations() {
             const container = document.getElementById("observationsContainer");
             container.innerHTML = "";
 
-            observations.forEach(obs => {
+            if (observations.length === 0) {
+                container.innerHTML =
+                    `<p class="no-results">No observations found for the selected filters.</p>`;
+            }
+            else {
+                observations.forEach(obs => {
 
-                const div = document.createElement("div");
+                    const div = document.createElement("div");
+                    div.classList.add("observation-card");
+                    const durationHTML = obs.duration_minutes && obs.duration_minutes > 0
+                    ? `<p>Duration: ${obs.duration_minutes} minutes</p>`
+                    : "";
 
-                div.innerHTML = `
-                    <h2>${obs.title}</h2>
-                    <h3>Category: ${obs.category}</h3>
-                    <p>Date: ${obs.date}</p>
-                    <p>Duration(minutes): ${obs.duration_minutes}</p>
-                    <p>Notes: ${obs.notes}</p>
-                    <h3>Created at: ${obs.created_at}</h3>
+                    div.innerHTML = `
+                        <h2 class="obs-title">${obs.title}</h2>
 
-                    <button onclick="deleteObservation(${obs.id})">
-                        🗑 Delete
-                    </button>
-                    <hr style="margin:20px 0;">
-                `;
+                        <div class="obs-meta">
+                            <p><strong>Category:</strong> ${obs.category}</p>
+                            <p><strong>Date:</strong> ${obs.date}</p>
+                            ${durationHTML}
+                            <p><strong>Created:</strong> ${formatTimestamp(obs.created_at)}</p>
+                        </div>
 
-                container.appendChild(div);
+                        <div class="notes-block">
+                            <strong>Notes</strong>
+                            <p>${obs.notes || "No notes provided."}</p>
+                        </div>
 
-            });
+                        <button onclick="deleteObservation(${obs.id})">🗑 Delete</button>
+                    `;
 
-            document.getElementById("pageInfo").innerText =
-                `Page ${meta.page} of ${meta.pages}`;
+                    container.appendChild(div);
 
+                });
+            }
+
+            const pageInfo = document.getElementById("pageInfo");
+            if (meta.pages === 0) {
+                pageInfo.innerText = "No pages available";
+            } else {
+                pageInfo.innerText = `Page ${meta.page} of ${meta.pages}`;
+            }
             const prevBtn = document.getElementById("prevBtn");
             const nextBtn = document.getElementById("nextBtn");
 
-            prevBtn.disabled = !meta.has_prev;
-            nextBtn.disabled = !meta.has_next;
+            prevBtn.disabled = meta.pages === 0 || !meta.has_prev;
+            nextBtn.disabled = meta.pages === 0 || !meta.has_next;
 
         });
 

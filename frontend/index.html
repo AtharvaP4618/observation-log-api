@@ -5,81 +5,84 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <div class="container">
+        <h1>Observation Logs</h1>
+        <hr>
+        <h2>Add Observations</h2>
 
-    <h1>Observation Logs</h1>
-    <hr>
-    <h2>Add Observations</h2>
+        <form id="observationForm">
+            <input 
+                type="text"
+                id="title"
+                placeholder="Observation Title"
+                required
+            >
 
-    <form id="observationForm">
-        <input 
-            type="text"
-            id="title"
-            placeholder="Observation Title"
-            required
-        >
+            <input
+                type="text"
+                id="category"
+                placeholder="Category"
+                required
+            >
 
-        <input
-            type="text"
-            id="category"
-            placeholder="Category"
-            required
-        >
+            <input
+                type="date"
+                id="date"
+                required
+            >
 
-        <input
-            type="date"
-            id="date"
-            required
-        >
+            <input
+                type="number"
+                id="duration"
+                placeholder="Duration (minutes)"
+                min="0"
+            >
 
-        <input
-            type="number"
-            id="duration"
-            placeholder="Duration (minutes)"
-            min="0"
-        >
+            <input
+                type="text"
+                id="notes"
+                placeholder="Notes"
+            >
 
-        <input
-            type="text"
-            id="notes"
-            placeholder="Notes"
-        >
+            <button type="submit">Add Observation</button>
+        </form>
+        
+        <hr>
 
-        <button type="submit">Add Observation</button>
-    </form>
-    
-    <hr>
+        <h2>Filters</h2>
+        <div id="filters">
+            <label>Category:</label>
+            <input type="text" id="filterCategory" placeholder="e.g. Astronomy">
 
-    <h2>Filters</h2>
-    <div id="filters">
-        <label>Category:</label>
-        <input type="text" id="filterCategory" placeholder="e.g. Astronomy">
+            <label>Date:</label>
+            <input type="date" id="filterDate">
 
-        <label>Date:</label>
-        <input type="date" id="filterDate">
+            <label>Min Duration:</label>
+            <input type="number" id="filterMinDuration" placeholder="minutes">
 
-        <label>Min Duration:</label>
-        <input type="number" id="filterMinDuration" placeholder="minutes">
+            <label>Max Duration:</label>
+            <input type="number" id="filterMaxDuration" placeholder="minutes">
 
-        <label>Max Duration:</label>
-        <input type="number" id="filterMaxDuration" placeholder="minutes">
+            <div class="filter-buttons">
+                <button id="applyFilters">Apply Filters</button>
+                <button id="clearFilters">Clear Filters</button>
+            </div>
+        </div>
 
-        <button id="applyFilters">Apply Filters</button>
-        <button id="clearFilters">Clear Filters</button>
+        <hr>
+
+        <h2>Observation List</h2>
+        <button id="loadBtn">Load Observations</button>
+
+        <div id="observationsContainer"></div>
+
+        <div id="paginationControls">
+            <button id="prevBtn">Previous</button>
+            <span id="pageInfo"></span>
+            <button id="nextBtn">Next</button>
+        </div>
+
+        <script src="script.js"></script>
     </div>
-
-    <hr>
-
-    <h2>Observation List</h2>
-    <button id="loadBtn">Load Observations</button>
-
-    <div id="observationsContainer"></div>
-
-    <div id="paginationControls">
-        <button id="prevBtn">Previous</button>
-        <span id="pageInfo"></span>
-        <button id="nextBtn">Next</button>
-    </div>
-
-    <script src="script.js"></script>
 </body>
 </html>

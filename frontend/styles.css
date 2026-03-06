@@ -1,0 +1,154 @@
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #f4f6f9;
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.container {
+    max-width: 900px;
+    margin: auto;
+    padding: 20px;
+}
+
+form,
+#filters {
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+input {
+    padding: 8px;
+    margin: 5px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+.obs-title {
+    margin: 0;
+    color: #2f80ed;
+}
+
+.obs-meta {
+    margin-top: 8px;
+}
+
+.obs-meta p {
+    margin: 3px 0;
+}
+
+#observationsContainer {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 15px;
+}
+
+.notes-block {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #f8f9fb;
+    border-left: 4px solid #2f80ed;
+    border-radius: 4px;
+}
+
+.notes-block strong {
+    display: block;
+    margin-bottom: 4px;
+}
+
+.notes-block p {
+    margin: 0;
+    color: #444;
+}
+
+button {
+    padding: 8px 12px;
+    margin: 5px;
+    border: none;
+    border-radius: 4px;
+    background-color: #2f80ed;
+    color: white;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #1c63c5;
+}
+
+.observation-card {
+    background: white;
+    padding: 16px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+#paginationControls {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.observation-card button {
+    background-color: #e74c3c;
+}
+
+.observation-card button:hover {
+    background-color: #c0392b;
+}
+
+#filters {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 10px;
+    align-items: center;
+}
+
+#filters button {
+    width: auto;
+    padding: 8px 16px;
+}
+
+.filter-buttons {
+    grid-column: span 2;
+    display: flex;
+    gap: 10px;
+}
+
+#filters label {
+    font-weight: bold;
+}
+
+.no-results {
+    text-align: center;
+    font-style: italic;
+    color: #777;
+    margin-top: 20px;
+}
+
+@media (max-width: 600px) {
+
+    input {
+        display: block;
+        width: 95%;
+    }
+
+    button {
+        width: 100%;
+        margin-top: 8px;
+    }
+
+    #filters {
+        grid-template-columns: 1fr;
+    }
+
+}
