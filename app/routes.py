@@ -2,6 +2,8 @@ from flask import Blueprint, jsonify, request, abort
 from .models import Observation
 from . import db
 from datetime import datetime
+from flasgger import swag_from
+from app.swagger_specs import *
 
 main = Blueprint("main", __name__)
 
@@ -9,6 +11,7 @@ main = Blueprint("main", __name__)
 def home():
     return jsonify({"message":"Observation Log API is running 🚀"})
 
+@swag_from(create_observation_spec)
 @main.route("/observations", methods = ["POST"])
 def create_observation():
     data = request.get_json()
@@ -36,7 +39,8 @@ def create_observation():
 
     except Exception as e:
         return jsonify({"error": str(e)})
-    
+
+@swag_from(get_observations_spec)    
 @main.route("/observations", methods = ["GET"])
 def get_observations():
     category = request.args.get("category")
@@ -105,7 +109,7 @@ def get_observations():
         "data": [obs.to_dict() for obs in observations] 
     }), 200
 
-
+@swag_from(get_observation_spec)
 @main.route("/observations/<int:id>", methods = ["GET"])
 def get_observations_by_id(id):
     observation = Observation.query.get(id)
@@ -115,6 +119,7 @@ def get_observations_by_id(id):
     
     return jsonify(observation.to_dict()), 200
 
+@swag_from(delete_observation_spec)
 @main.route("/observations/<int:id>", methods = ["DELETE"])
 def delete_observations_by_id(id):
     observation = Observation.query.get(id)
@@ -129,6 +134,7 @@ def delete_observations_by_id(id):
         "message": "Observation deleted successfully"
     }), 200
 
+@swag_from(update_observation_spec)
 @main.route("/observations/<int:id>", methods = ["PUT"])
 def update_observation(id):
     observation = Observation.query.get(id)
@@ -154,13 +160,15 @@ def update_observation(id):
     db.session.commit()
 
     return jsonify(observation.to_dict()), 200  
-                               
+
+@swag_from(health_spec)                               
 @main.route("/health", methods=["GET"])
 def health():
     return {
         "status": "ok"
     }, 200
 
+@swag_from(meta_spec)
 @main.route("/meta", methods=["GET"])
 def metadata():
     return {

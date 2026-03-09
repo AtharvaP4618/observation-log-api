@@ -2,12 +2,14 @@ from flask import Flask, jsonify
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from config import Config
+from flasgger import Swagger, swag_from
 
 db = SQLAlchemy()
 
 
 def create_app():
     app = Flask(__name__)
+    swagger = Swagger(app)
     CORS(app)
     app.config.from_object(Config)
 
