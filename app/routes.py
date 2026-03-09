@@ -155,3 +155,16 @@ def update_observation(id):
 
     return jsonify(observation.to_dict()), 200  
                                
+@main.route("/health", methods=["GET"])
+def health():
+    return {
+        "status": "ok"
+    }, 200
+
+@main.route("/meta", methods=["GET"])
+def metadata():
+    return {
+        "api": "Observation Log API",
+        "version": "1.0",
+        "author": "Atharva Pandit"
+    }, 200                               

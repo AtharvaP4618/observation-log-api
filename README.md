@@ -142,6 +142,22 @@ Example request body:
 
 ------------------------------------------------------------------------
 
+### Health Check
+
+GET /health
+
+Returns API health status.
+
+------------------------------------------------------------------------
+
+### Metadata
+
+GET /meta
+
+Returns API information such as version and author.
+
+------------------------------------------------------------------------
+
 # 🎯 Purpose of Project
 
 This project was built as a learning exercise to understand:
