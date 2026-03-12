@@ -1,15 +1,30 @@
-from flask import Blueprint, jsonify, request, abort 
+from flask import Blueprint, jsonify, request, abort, send_from_directory
 from .models import Observation
 from . import db
 from datetime import datetime
 from flasgger import swag_from
 from app.swagger_specs import *
+import os 
 
 main = Blueprint("main", __name__)
 
 @main.route("/")
 def home():
     return jsonify({"message":"Observation Log API is running 🚀"})
+
+@main.route("/")
+def serve_frontend():
+    return send_from_directory(
+        os.path.join(os.getcwd(), "frontend"),
+        "index.html"
+    )
+
+@main.route("/<path:path>")
+def serve_static(path):
+    return send_from_directory(
+        os.path.join(os.getcwd(), "frontend"),
+        path
+    )
 
 @swag_from(create_observation_spec)
 @main.route("/observations", methods = ["POST"])
