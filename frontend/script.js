@@ -49,7 +49,7 @@ function loadObservations() {
         .then(response => response.json())
         .then(result => {
 
-            const observations = result.data;
+            const observations = result.data || [];
             const meta = result.meta;
 
             const container = document.getElementById("observationsContainer");

@@ -13,13 +13,15 @@ def create_app():
     CORS(app)
     app.config.from_object(Config)
 
-    db.init_app(app)
-    with app.app_context():
-        db.create_all() 
+    db.init_app(app) 
     
     from . import models
     from .routes import main
     app.register_blueprint(main)
+
+    with app.app_context():
+        db.create_all()
+
 
     @app.errorhandler(400)
     def handle_400(error):
