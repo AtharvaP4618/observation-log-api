@@ -8,19 +8,18 @@ import os
 
 main = Blueprint("main", __name__)
 
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+FRONTEND_DIR = os.path.join(BASE_DIR, "frontend")
+
+
 @main.route("/")
 def serve_frontend():
-    return send_from_directory(
-        os.path.join(os.getcwd(), "frontend"),
-        "index.html"
-    )
+    return send_from_directory(FRONTEND_DIR, "index.html")
+
 
 @main.route("/<path:path>")
 def serve_static(path):
-    return send_from_directory(
-        os.path.join(os.getcwd(), "frontend"),
-        path
-    )
+    return send_from_directory(FRONTEND_DIR, path)
 
 @swag_from(create_observation_spec)
 @main.route("/observations", methods = ["POST"])

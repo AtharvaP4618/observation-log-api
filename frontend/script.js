@@ -27,7 +27,7 @@ function loadObservations() {
     const minDuration = document.getElementById("filterMinDuration").value;
     const maxDuration = document.getElementById("filterMaxDuration").value;
 
-    let url = `http://127.0.0.1:5000/observations?page=${currentPage}`;
+    let url = `/observations?page=${currentPage}`;
 
     if (category) {
         url += `&category=${category}`;
@@ -142,7 +142,7 @@ document.getElementById("observationForm").addEventListener("submit", function(e
         notes: notes
     };
 
-    fetch("http://127.0.0.1:5000/observations", {
+    fetch("/observations", {
         method: "POST",
 
         headers: {
@@ -171,7 +171,7 @@ function deleteObservation(id) {
         return;
     }
 
-    fetch(`http://127.0.0.1:5000/observations/${id}`, {
+    fetch(`/observations/${id}`, {
         method: "DELETE"
     })
     .then(response => response.json())
