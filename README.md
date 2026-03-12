@@ -39,7 +39,8 @@ supports filtering, pagination, and deletion of observations.
 
 ## Data Storage
 
--   JSON-based storage
+-   SQLite database (via SQLAlchemy ORM)
+-   The application supports PostgreSQL for production but defaults to SQLite for lightweight deployments.
 
 ------------------------------------------------------------------------
 
@@ -174,7 +175,7 @@ This project was built as a learning exercise to understand:
 
 -   Edit observation feature
 -   Authentication system
--   Database integration (PostgreSQL / MongoDB)
+-   Production deployment with PostgreSQL
 -   Mobile responsive UI
 -   Deployment with Docker
 

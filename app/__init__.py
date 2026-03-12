@@ -14,6 +14,8 @@ def create_app():
     app.config.from_object(Config)
 
     db.init_app(app)
+    with app.app_context():
+        db.create_all() 
     
     from . import models
     from .routes import main
