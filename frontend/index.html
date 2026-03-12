@@ -37,17 +37,23 @@
                 placeholder="Duration (minutes)"
                 min="0"
             >
-
-            <input
-                type="text"
-                id="notes"
-                placeholder="Notes"
-            >
+            <div class="notes-group">
+                <label for="notes">Notes</label>
+                <textarea 
+                    id="notes" 
+                    placeholder="Write observation notes..." 
+                    maxlength="500"
+                    rows="3"
+                >
+                </textarea>
+            </div>
 
             <button type="submit">Add Observation</button>
         </form>
         
         <hr>
+
+        <button id="statsBtn" class="btn-primary">View Stats</button>
 
         <h2>Filters</h2>
         <div id="filters">
@@ -83,6 +89,19 @@
         </div>
 
         <script src="script.js"></script>
+    </div>
+    <div id="statsModal" class="modal">
+        <div class="modal-content">
+            <span id="closeStats">&times;</span>
+
+            <h3>Observation Statistics</h3>
+
+            <p><strong>Total Observations:</strong> <span id="statTotal"></span></p>
+            <p><strong>Total Duration:</strong> <span id="statDuration"></span> minutes</p>
+
+            <h4>Categories</h4>
+            <ul id="statCategories"></ul>
+        </div>
     </div>
 </body>
 </html>

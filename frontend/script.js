@@ -203,6 +203,44 @@ document.getElementById("clearFilters").addEventListener("click", function () {
 
 });
 
+document.addEventListener("DOMContentLoaded", () => {
+
+const statsBtn = document.getElementById("statsBtn");
+const statsModal = document.getElementById("statsModal");
+const closeStats = document.getElementById("closeStats");
+
+if (statsBtn) {
+
+statsBtn.addEventListener("click", async () => {
+
+    const response = await fetch("/stats");
+    const data = await response.json();
+
+    document.getElementById("statTotal").textContent = data.total_observations;
+    document.getElementById("statDuration").textContent = data.total_duration;
+
+    const list = document.getElementById("statCategories");
+    list.innerHTML = "";
+
+    for (const category in data.categories) {
+        const li = document.createElement("li");
+        li.textContent = `${category}: ${data.categories[category]}`;
+        list.appendChild(li);
+    }
+
+    statsModal.style.display = "block";
+});
+
+}
+
+if (closeStats) {
+closeStats.addEventListener("click", () => {
+    statsModal.style.display = "none";
+});
+}
+
+});
+
 window.onload = function () {
     loadObservations();
 };

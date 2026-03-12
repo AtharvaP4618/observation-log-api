@@ -158,6 +158,33 @@ def update_observation(id):
 
     return jsonify(observation.to_dict()), 200  
 
+@swag_from(get_stats_spec)
+@main.route("/stats", methods=["GET"])
+def get_stats():
+    observations = Observation.query.all()
+
+    total_observations = len(observations)
+
+    total_duration = sum(
+        obs.duration_minutes for obs in observations if obs.duration_minutes
+    )
+
+    category_counts = {}
+
+    for obs in observations:
+        category = obs.category or "unknown"
+
+        if category in category_counts:
+            category_counts[category] += 1
+        else:
+            category_counts[category] = 1
+
+    return jsonify({
+        "total_observations": total_observations,
+        "total_duration": total_duration,
+        "categories": category_counts
+    })
+
 @swag_from(health_spec)                               
 @main.route("/health", methods=["GET"])
 def health():

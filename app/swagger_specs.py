@@ -133,3 +133,37 @@ meta_spec = {
         }
     }
 }
+
+get_stats_spec = {
+    "tags": ["Observations"],
+    "description": "Get summary statistics for all observations",
+    "responses": {
+        200: {
+            "description": "Observation statistics",
+            "schema": {
+                "type": "object",
+                "properties": {
+                    "total_observations": {
+                        "type": "integer",
+                        "example": 6
+                    },
+                    "total_duration": {
+                        "type": "integer",
+                        "example": 165
+                    },
+                    "categories": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "integer"
+                        },
+                        "example": {
+                            "moon": 3,
+                            "planet": 1,
+                            "stars": 2
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

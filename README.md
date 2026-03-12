@@ -7,6 +7,9 @@ Users can record observations such as stars, planets, meteors, or moon
 sightings and view them in an organized card layout. The application
 supports filtering, pagination, and deletion of observations.
 
+Live Demo:
+https://observation-log-api.onrender.com
+
 ------------------------------------------------------------------------
 
 # 🚀 Features
