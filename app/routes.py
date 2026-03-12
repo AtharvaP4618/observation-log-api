@@ -9,10 +9,6 @@ import os
 main = Blueprint("main", __name__)
 
 @main.route("/")
-def home():
-    return jsonify({"message":"Observation Log API is running 🚀"})
-
-@main.route("/")
 def serve_frontend():
     return send_from_directory(
         os.path.join(os.getcwd(), "frontend"),
